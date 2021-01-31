@@ -8,7 +8,7 @@ class App extends Component {
 
     this.state = {
       payment_amount: 0,
-      refund_id: 0
+      refund_id: 0,
     };
 
     this.paymentHandler = this.paymentHandler.bind(this);
@@ -22,41 +22,46 @@ class App extends Component {
     const self = this;
     const options = {
       key: process.env.RAZOR_PAY_TEST_KEY,
-      amount: payment_amount*100,
-      name: 'Payments',
-      description: 'Donate yourself some time',
+      amount: payment_amount * 100,
+      name: "Payments",
+      description: "Donate yourself some time",
 
       handler(response) {
         const paymentId = response.razorpay_payment_id;
-        const url = process.env.URL+'/api/v1/rzp_capture/'+paymentId+'/'+payment_amount;
+        const url =
+          process.env.URL +
+          "/api/v1/rzp_capture/" +
+          paymentId +
+          "/" +
+          payment_amount;
         // Using my server endpoints to capture the payment
         fetch(url, {
-          method: 'get',
+          method: "get",
           headers: {
-            "Content-type": "application/x-www-form-urlencoded; charset=UTF-8"
-          }
+            "Content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+          },
         })
-        .then(resp =>  resp.json())
-        .then(function (data) {
-          console.log('Request succeeded with JSON response', data);
-          self.setState({
-            refund_id: response.razorpay_payment_id
+          .then((resp) => resp.json())
+          .then(function (data) {
+            console.log("Request succeeded with JSON response", data);
+            self.setState({
+              refund_id: response.razorpay_payment_id,
+            });
+          })
+          .catch(function (error) {
+            console.log("Request failed", error);
           });
-        })
-        .catch(function (error) {
-          console.log('Request failed', error);
-        });
       },
 
       prefill: {
-        name: 'Shashank Shekhar',
-        email: 'ss@localtrip.in',
+        name: "ASKAI SOFTECH",
+        email: "askdajd@djasd.com",
       },
       notes: {
-        address: 'Goa,India',
+        address: "Goa,India",
       },
       theme: {
-        color: '#9D50BB',
+        color: "#9D50BB",
       },
     };
     const rzp1 = new window.Razorpay(options);
@@ -67,24 +72,23 @@ class App extends Component {
   refundHandler(e) {
     e.preventDefault();
     const { refund_id } = this.state;
-    const url = process.env.URL+'/api/v1/rzp_refunds/'+refund_id;
+    const url = process.env.URL + "/api/v1/rzp_refunds/" + refund_id;
 
     // Using my server endpoints to initiate the refund
     fetch(url, {
-      method: 'get',
+      method: "get",
       headers: {
-        "Content-type": "application/x-www-form-urlencoded; charset=UTF-8"
-      }
+        "Content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+      },
     })
-    .then(resp =>  resp.json())
-    .then(function (data) {
-      console.log('Request succeeded with JSON response', data);
-      alert("Refund Succeeded", )
-    })
-    .catch(function (error) {
-      console.log('Request failed', error);
-    });
-
+      .then((resp) => resp.json())
+      .then(function (data) {
+        console.log("Request succeeded with JSON response", data);
+        alert("Refund Succeeded");
+      })
+      .catch(function (error) {
+        console.log("Request failed", error);
+      });
   }
 
   render() {
@@ -107,7 +111,7 @@ class App extends Component {
                 value={payment_amount}
                 className="pay_amount"
                 placeholder="Amount in INR"
-                onChange={e =>
+                onChange={(e) =>
                   this.setState({ payment_amount: e.target.value })
                 }
               />
@@ -132,7 +136,7 @@ class App extends Component {
                 value={refund_id}
                 type="text"
                 className="refund_amount"
-                onChange={e => this.setState({ refund_id: e.target.value })}
+                onChange={(e) => this.setState({ refund_id: e.target.value })}
               />
               <p>
                 <button type="submit">Refund Now</button>
